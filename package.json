@@ -1,0 +1,25 @@
+{
+  "name": "yelpcamp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TanyaSeagull/YelpCamp.git"
+  },
+  "keywords": [],
+  "author": "Tanya_Seagull",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TanyaSeagull/YelpCamp/issues"
+  },
+  "homepage": "https://github.com/TanyaSeagull/YelpCamp#readme",
+  "description": "",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mongoose": "^8.13.2"
+  }
+}
