@@ -26,18 +26,18 @@ YelpCamp is a web application where users can discover, create, and review campg
 ## ✨ Features  
 
 ### 🏕️ Campgrounds  
-- ✅ Create, edit, or delete campgrounds.  
-- 🔍 Search by **name** or **location**.  
-- 🔄 Sort by:  
-  - ⭐ Highest/lowest rating  
-  - 💬 Most reviews  
-  - 💰 Highest/lowest price  
+- Create, edit, or delete campgrounds.  
+- Search by **name** or **location**.  
+- Sort by:  
+  - Highest/lowest rating  
+  - Most reviews  
+  - Highest/lowest price  
 
 ### 📝 Reviews  
-- ✏️ Leave **one review per campground** (per user).  
-- 🗑️ Edit or delete your reviews.  
+- Leave **one review per campground** (per user).  
+- Edit or delete your reviews.  
 
 ### 👤 User Profiles  
-- 📋 View details: **name, email, phone, join date**.  
-- 🏞️ See all user-contributed campgrounds.  
-- ⚙️ **Edit profile** or **delete account**. 
+- View details: **name, email, phone, join date**.  
+- See all user-contributed campgrounds.  
+- **Edit profile** or **delete account**. 
