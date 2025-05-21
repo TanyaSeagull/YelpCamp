@@ -8,7 +8,11 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const { campgroundSchema, reviewSchema } = require('./schemas.js');
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 
+const userRoutes = require('./routes/users');
 const campgrounds = require('./routes/campgrounds');
 const reviews = require('./routes/reviews');
 
