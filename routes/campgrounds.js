@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const catchAsync = require('../utils/catchAsync.js');
-const { campgroundSchema } = require('../schemas.js');
 const { isLoggedIn, isAuthor, validateCampground } = require('../middleware');
 
-const ExpressError = require('../utils/expressError.js');
 const Campground = require('../models/campground.js');
 
 
