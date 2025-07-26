@@ -1,56 +1,38 @@
-const Campground = require('../models/campground');
+const User = require('../models/user');
 
-module.exports.index = async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', { campgrounds })
-};
+module.exports.renderRegister = (req, res) => {
+    res.render('users/register');
+}
 
-module.exports.renderNewForm = (req, res) => {
-    res.render('campgrounds/new');
-};
-
-module.exports.createCampground = async (req, res, next) => {
-    const campground = new Campground(req.body.campground);
-    campground.author = req.user._id;
-    await campground.save();
-    req.flash('success', 'Successfully made a new campground!');
-    res.redirect(`/campgrounds/${campground._id}`)
-};
-
-module.exports.showCampground = async (req, res,) => {
-    const campground = await Campground.findById(req.params.id).populate({
-        path: 'reviews',
-        populate: {
-            path: 'author'
-        }
-    }).populate('author');
-    if (!campground) {
-        req.flash('error', 'Cannot find that campground!');
-        return res.redirect('/campgrounds');
+module.exports.register = async (req, res, next) => {
+    try {
+        const { email, username, password } = req.body;
+        const user = new User({ email, username });
+        const registeredUser = await User.register(user, password);
+        req.login(registeredUser, err => {
+            if (err) return next(err);
+            req.flash('success', 'Welcome to Yelp Camp!');
+            res.redirect('/campgrounds');
+        })
+    } catch (e) {
+        req.flash('error', e.message);
+        res.redirect('register');
     }
-    res.render('campgrounds/show', { campground });
-};
+}
 
-module.exports.renderEditForm = async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id)
-    if (!campground) {
-        req.flash('error', 'Cannot find that campground!');
-        return res.redirect('/campgrounds');
-    }
-    res.render('campgrounds/edit', { campground });
-};
+module.exports.renderLogin = (req, res) => {
+    res.render('users/login');
+}
 
-module.exports.updateCampground = async (req, res) => {
-    const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
-    req.flash('success', 'Successfully updated campground!');
-    res.redirect(`/campgrounds/${campground._id}`)
-};
+module.exports.login = (req, res) => {
+    req.flash('success', 'welcome back!');
+    const redirectUrl = req.session.returnTo || '/campgrounds';
+    delete req.session.returnTo;
+    res.redirect(redirectUrl);
+}
 
-module.exports.deleteCampground = async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndDelete(id);
-    req.flash('success', 'Successfully deleted campground')
+module.exports.logout = (req, res) => {
+    req.logout();
+    req.flash('success', "Goodbye!");
     res.redirect('/campgrounds');
-};
+}
