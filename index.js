@@ -1,5 +1,9 @@
-if (process.env.NODE_ENV !== "production") {
-    require('dotenv').config();
+require('dotenv').config();
+
+// Проверяем, что ключи Cloudinary есть
+if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_KEY || !process.env.CLOUDINARY_SECRET) {
+    console.error("❌ Cloudinary environment variables are missing!");
+    process.exit(1); // Останавливаем приложение, если переменных нет
 }
 
 const express = require('express');
