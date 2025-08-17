@@ -1,3 +1,4 @@
+const ExpressError = require('./utils/ExpressError');
 const { campgroundSchema, reviewSchema } = require('./schemas.js');
 
 const Campground = require('./models/campground');
@@ -20,13 +21,18 @@ module.exports.storeReturnTo = (req, res, next) => {
 };
 
 module.exports.validateCampground = (req, res, next) => {
+  // Если в теле запроса есть ТОЛЬКО deleteImages (без изменения campground)
+  if (req.body.deleteImages && !req.body.campground) {
+    return next(); // Пропускаем валидацию
+  }
+
+  // Стандартная валидация для всех остальных случаев
   const { error } = campgroundSchema.validate(req.body);
   if (error) {
-      const msg = error.details.map(el => el.message).join(',')
-      throw new ExpressError(msg, 400)
-  } else {
-      next();
+    const msg = error.details.map(el => el.message).join(',');
+    throw new ExpressError(msg, 400);
   }
+  next();
 };
 
 
