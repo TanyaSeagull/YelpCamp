@@ -1,3 +1,5 @@
+
+
 const Campground = require('../models/campground');
 const { cloudinary } = require("../cloudinary");
 
@@ -6,7 +8,29 @@ maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', { campgrounds });
+    
+    // Формируем GeoJSON для карты
+    const geoJSON = {
+        type: "FeatureCollection",
+        features: campgrounds.map(campground => ({
+            type: "Feature",
+            geometry: campground.geometry,
+            properties: {
+                id: campground._id,
+                title: campground.title,
+                location: campground.location,
+                popUpMarkup: `
+                    <strong><a href="/campgrounds/${campground._id}">${campground.title}</a></strong>
+                    <p>${campground.location}</p>
+                `
+            }
+        }))
+    };
+    
+    res.render('campgrounds/index', { 
+        campgrounds,
+        campgroundsGeoJSON: JSON.stringify(geoJSON) // Передаем как строку
+    });
 }
 
 module.exports.renderNewForm = (req, res) => {

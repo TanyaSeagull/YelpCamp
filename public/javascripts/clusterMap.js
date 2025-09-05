@@ -1,20 +1,26 @@
-maptilersdk.config.apiKey = maptilerApiKey;
+if (typeof maptilersdk !== 'undefined' && typeof maptilerApiKey !== 'undefined') {
+    maptilersdk.config.apiKey = maptilerApiKey;
 
-const map = new maptilersdk.Map({
-    container: 'map',
-    style: maptilersdk.MapStyle.BRIGHT,
-    center: [-103.59179687498357, 40.66995747013945],
-    zoom: 3
-});
-
-map.on('load', function () {
-    map.addSource('campgrounds', {
-        type: 'geojson',
-        data: campgrounds,
-        cluster: true,
-        clusterMaxZoom: 14, // Max zoom to cluster points on
-        clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
+    const map = new maptilersdk.Map({
+        container: 'map',
+        style: maptilersdk.MapStyle.BRIGHT,
+        center: [-103.59179687498357, 40.66995747013945],
+        zoom: 3
     });
+
+    map.on('load', function () {
+        if (!campgrounds || !campgrounds.features || campgrounds.features.length === 0) {
+            console.warn('No campground data available for map');
+            return;
+        }
+
+        map.addSource('campgrounds', {
+            type: 'geojson',
+            data: campgrounds,
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 50
+        });
 
     map.addLayer({
         id: 'clusters',
@@ -111,3 +117,6 @@ map.on('load', function () {
         map.getCanvas().style.cursor = '';
     });
 });
+} else {
+    console.error('Maptiler SDK or API key not available');
+}

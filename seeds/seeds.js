@@ -33,10 +33,8 @@ async function seedImg() {
 const seedDB = async () => {
     await Campground.deleteMany({});
     
-    // Добавленная проверка: находим или создаём тестового пользователя
     let user = await User.findOne();
     if (!user) {
-        console.log('⚠️ Нет пользователей! Создаю тестового пользователя...');
         user = new User({
             email: 'test@test.com',
             username: 'testuser'
@@ -44,34 +42,43 @@ const seedDB = async () => {
         await User.register(user, 'testpassword');
     }
 
-    console.log(`🔄 Создаю кемпинги для пользователя ${user.username}...`);
+    console.log(`Создаю кемпинги для пользователя ${user.username}...`);
     
     for (let i = 0; i < 50; i++) {
         const random1000 = Math.floor(Math.random() * 1000);
         const price = Math.floor(Math.random() * 20) + 10;
+        
+        // ВАЖНО: Проверьте правильность порядка координат!
         const camp = new Campground({
             author: user._id,
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             description: 'Lorem ipsum dolor sit amet...',
             price,
+            geometry: {
+                type: "Point",
+                coordinates: [
+                    cities[random1000].longitude, // Долгота first
+                    cities[random1000].latitude   // Широта second
+                ]
+            },
             images: [
                 {
                     url: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600060601/YelpCamp/ahfnenvca4tha00h2ubt.png',
                     filename: 'YelpCamp/ahfnenvca4tha00h2ubt'
-                },
-                {
-                    url: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600060601/YelpCamp/ruyoaxgf72nzpi4y6cdi.png',
-                    filename: 'YelpCamp/ruyoaxgf72nzpi4y6cdi'
                 }
             ]
         });
 
+        // Добавьте проверку координат
+        console.log(`Кемпинг ${i+1}: ${camp.location}`);
+        console.log(`Координаты: ${camp.geometry.coordinates}`);
+        
         try {
             await camp.save();
             console.log(`✅ Кемпинг #${i + 1} создан`);
         } catch (err) {
-            console.error(`❌ Ошибка при создании кемпинга #${i + 1}:`, err.message);
+            console.error(`❌ Ошибка:`, err.message);
         }
     }
 }
