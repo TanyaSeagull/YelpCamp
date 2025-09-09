@@ -1,28 +1,18 @@
-if (typeof maptilersdk !== 'undefined' && campground && campground.geometry) {
-    maptilersdk.config.apiKey = maptilerApiKey;
+maptilersdk.config.apiKey = maptilerApiKey;
 
-    const map = new maptilersdk.Map({
-        container: 'map',
-        style: maptilersdk.MapStyle.BRIGHT,
-        center: campground.geometry.coordinates,
-        zoom: 10
-    });
+const map = new maptilersdk.Map({
+    container: 'map',
+    style: maptilersdk.MapStyle.BRIGHT,
+    center: campground.geometry.coordinates, // starting position [lng, lat]
+    zoom: 10 // starting zoom
+});
 
-    map.on('load', function() {
-        new maptilersdk.Marker()
-            .setLngLat(campground.geometry.coordinates)
-            .setPopup(
-                new maptilersdk.Popup({ offset: 25 })
-                    .setHTML(
-                        `<h3>${campground.title}</h3><p>${campground.location}</p>`
-                    )
+new maptilersdk.Marker()
+    .setLngLat(campground.geometry.coordinates)
+    .setPopup(
+        new maptilersdk.Popup({ offset: 25 })
+            .setHTML(
+                `<h3>${campground.title}</h3><p>${campground.location}</p>`
             )
-            .addTo(map);
-    });
-} else {
-    console.error('Map initialization failed:', {
-        maptilersdk: typeof maptilersdk,
-        campground: campground,
-        geometry: campground?.geometry
-    });
-}
+    )
+    .addTo(map)

@@ -8,6 +8,7 @@ if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_KEY || !proces
 
 const express = require('express');
 const app = express();
+app.set('query parser', 'extended');
 const engine = require('ejs-mate');
 const ExpressError = require('./utils/expressError');
 const methodOverride = require('method-override');
@@ -19,6 +20,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
+const sanitizeV5 = require('./utils/mongoSanitizeV5.js');
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
@@ -39,6 +41,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(sanitizeV5({ replaceWith: '_' }));
 
 const sessionConfig = {
   secret: 'thisshouldbeabettersecret!',
