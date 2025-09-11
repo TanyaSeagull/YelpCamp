@@ -77,6 +77,7 @@ const connectSrcUrls = [
   "https://api.maptiler.com/",
 ];
 const fontSrcUrls = [];
+
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
@@ -92,7 +93,11 @@ app.use(
                 "data:",
                 "https://res.cloudinary.com/dnw1krx0t/", 
                 "https://images.unsplash.com/",
-                 "https://api.maptiler.com/",
+                "https://source.unsplash.com/",
+                "https://picsum.photos/",
+                "https://api.maptiler.com/",
+                "https://*.unsplash.com/",
+                "https://*.picsum.photos/" 
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },

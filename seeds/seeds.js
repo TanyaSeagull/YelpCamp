@@ -42,13 +42,10 @@ const seedDB = async () => {
         await User.register(user, 'testpassword');
     }
 
-    console.log(`Создаю кемпинги для пользователя ${user.username}...`);
-    
     for (let i = 0; i < 50; i++) {
         const random1000 = Math.floor(Math.random() * 1000);
         const price = Math.floor(Math.random() * 20) + 10;
         
-        // ВАЖНО: Проверьте правильность порядка координат!
         const camp = new Campground({
             author: user._id,
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
@@ -58,28 +55,19 @@ const seedDB = async () => {
             geometry: {
                 type: "Point",
                 coordinates: [
-                    cities[random1000].longitude, // Долгота first
-                    cities[random1000].latitude   // Широта second
+                    cities[random1000].longitude,
+                    cities[random1000].latitude
                 ]
             },
             images: [
                 {
-                    url: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600060601/YelpCamp/ahfnenvca4tha00h2ubt.png',
-                    filename: 'YelpCamp/ahfnenvca4tha00h2ubt'
+                    url: 'https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png',
+                    filename: 'YelpCamp/lz8jjv2gyynjil7lswf4'
                 }
             ]
         });
 
-        // Добавьте проверку координат
-        console.log(`Кемпинг ${i+1}: ${camp.location}`);
-        console.log(`Координаты: ${camp.geometry.coordinates}`);
-        
-        try {
-            await camp.save();
-            console.log(`✅ Кемпинг #${i + 1} создан`);
-        } catch (err) {
-            console.error(`❌ Ошибка:`, err.message);
-        }
+        await camp.save();
     }
 }
 
