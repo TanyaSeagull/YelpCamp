@@ -74,7 +74,8 @@ const styleSrcUrls = [
     "https://cdn.maptiler.com/",
 ];
 const connectSrcUrls = [
-  "https://api.maptiler.com/",
+    "https://api.maptiler.com/",
+    "https://cdn.jsdelivr.net/" // ← ДОБАВЬТЕ ЭТУ СТРОЧКУ!
 ];
 const fontSrcUrls = [];
 
@@ -91,13 +92,15 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/dnw1krx0t/", 
+                "https://res.cloudinary.com/dnw1krx0t/",
+                "https://res.cloudinary.com/douqbebwk/", // ← ДОБАВЬТЕ ЭТУ СТРОЧКУ!
                 "https://images.unsplash.com/",
                 "https://source.unsplash.com/",
                 "https://picsum.photos/",
                 "https://api.maptiler.com/",
                 "https://*.unsplash.com/",
-                "https://*.picsum.photos/" 
+                "https://*.picsum.photos/",
+                "https://*.cloudinary.com/" // ← И ЭТУ СТРОЧКУ!
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
