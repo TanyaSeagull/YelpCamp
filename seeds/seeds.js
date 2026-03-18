@@ -5,18 +5,18 @@ const { places, descriptors } = require('./seedHelpers');
 const Campground = require('../models/campground');
 const User = require('../models/user');
 
-// ВРЕМЕННО: выводим информацию для отладки
+//выводим информацию для отладки
 console.log('🔍 Проверка переменных окружения:');
 console.log('DB_URL существует?', process.env.DB_URL ? '✅ Да' : '❌ Нет');
 if (process.env.DB_URL) {
-    // Показываем только начало строки, чтобы скрыть пароль
+    
     console.log('DB_URL начинается с:', process.env.DB_URL.substring(0, 30) + '...');
 }
 
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
 console.log('🔌 Подключаемся к:', dbUrl.substring(0, 30) + '...');
 
-// Увеличиваем таймауты
+
 mongoose.connect(dbUrl, {
     serverSelectionTimeoutMS: 30000, // 30 секунд
     socketTimeoutMS: 45000, // 45 секунд
@@ -79,9 +79,9 @@ const seedDB = async () => {
         // Ждем подключения к БД
         await waitForConnection();
         
-        console.log('🗑️  Удаляем существующие кемпинги...');
+        console.log('Удаляем существующие кемпинги...');
         await Campground.deleteMany({});
-        console.log('✅ Кемпинги удалены');
+        console.log('Кемпинги удалены');
         
         // Находим или создаем тестового пользователя
         console.log('👤 Проверяем наличие пользователя...');
@@ -93,12 +93,12 @@ const seedDB = async () => {
                 username: 'testuser'
             });
             await User.register(user, 'testpassword');
-            console.log('✅ Тестовый пользователь создан');
+            console.log('Тестовый пользователь создан');
         } else {
-            console.log('✅ Найден существующий пользователь');
+            console.log('Найден существующий пользователь');
         }
 
-        console.log('🏕️  Создаем 50 кемпингов...');
+        console.log('Создаем 50 кемпингов...');
         for (let i = 0; i < 50; i++) {
             const random1000 = Math.floor(Math.random() * 1000);
             const price = Math.floor(Math.random() * 20) + 10;
@@ -130,7 +130,7 @@ const seedDB = async () => {
             await camp.save();
             
             if ((i + 1) % 10 === 0) {
-                console.log(`✅ ${i + 1} кемпингов создано...`);
+                console.log(`${i + 1} кемпингов создано...`);
             }
         }
         
@@ -140,14 +140,14 @@ const seedDB = async () => {
         throw err;
     } finally {
         await mongoose.connection.close();
-        console.log('🔌 Соединение с БД закрыто');
+        console.log('Соединение с БД закрыто');
     }
 };
 
 // Запускаем с обработкой ошибок
 seedDB()
     .then(() => {
-        console.log('✨ Скрипт завершен успешно');
+        console.log('Скрипт завершен успешно');
         process.exit(0);
     })
     .catch(err => {

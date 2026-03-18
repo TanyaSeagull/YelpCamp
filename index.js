@@ -94,14 +94,14 @@ app.use(
                 "blob:",
                 "data:",
                 "https://res.cloudinary.com/dnw1krx0t/",
-                "https://res.cloudinary.com/douqbebwk/", // ← ДОБАВЬТЕ ЭТУ СТРОЧКУ!
+                "https://res.cloudinary.com/douqbebwk/", 
                 "https://images.unsplash.com/",
                 "https://source.unsplash.com/",
                 "https://picsum.photos/",
                 "https://api.maptiler.com/",
                 "https://*.unsplash.com/",
                 "https://*.picsum.photos/",
-                "https://*.cloudinary.com/" // ← И ЭТУ СТРОЧКУ!
+                "https://*.cloudinary.com/" 
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
