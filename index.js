@@ -84,9 +84,10 @@ app.use(
     helmet.contentSecurityPolicy({
         directives: {
             defaultSrc: [],
-            connectSrc: ["'self'", ...connectSrcUrls],
-            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
-            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            connectSrc: ["'self'", "https://api.maptiler.com"],
+            scriptSrc: ["'unsafe-inline'", "'self'", "https://cdn.maptiler.com"],
+            scriptSrcAttr: ["'unsafe-inline'", "'self'"], // РАЗРЕШАЕМ INLINE ОБРАБОТЧИКИ
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.maptiler.com", "https://fonts.googleapis.com"],
             workerSrc: ["'self'", "blob:"],
             objectSrc: [],
             imgSrc: [
@@ -98,12 +99,12 @@ app.use(
                 "https://images.unsplash.com/",
                 "https://source.unsplash.com/",
                 "https://picsum.photos/",
-                "https://api.maptiler.com/",
+                "https://api.maptiler.com",
                 "https://*.unsplash.com/",
                 "https://*.picsum.photos/",
                 "https://*.cloudinary.com/" 
             ],
-            fontSrc: ["'self'", ...fontSrcUrls],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
         },
     })
 );

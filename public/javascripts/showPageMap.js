@@ -1,6 +1,7 @@
 console.log('showPageMap.js loaded', { 
     campground: typeof campground !== 'undefined' ? campground : 'undefined',
-    maptilerApiKey: typeof maptilerApiKey !== 'undefined' ? maptilerApiKey : 'undefined'
+    maptilerApiKey: typeof maptilerApiKey !== 'undefined' ? maptilerApiKey : 'undefined',
+    maptilersdk: typeof maptilersdk !== 'undefined' ? 'loaded' : 'not loaded'
 });
 
 // Функция для отображения ошибки
@@ -20,6 +21,16 @@ function showMapError(message, details = '') {
 
 // Функция для инициализации карты
 function initializeMap() {
+    // Проверяем наличие Maptiler SDK
+    if (typeof maptilersdk === 'undefined') {
+        console.log('⏳ Waiting for Maptiler SDK to load...');
+        // Пробуем еще раз через 500мс
+        setTimeout(initializeMap, 500);
+        return;
+    }
+    
+    console.log('✅ Maptiler SDK loaded, version:', maptilersdk.version);
+
     // Проверяем наличие необходимых данных
     if (typeof maptilerApiKey === 'undefined' || maptilerApiKey === '') {
         showMapError('Map configuration error', 'API key missing');
@@ -79,7 +90,7 @@ function initializeMap() {
                 )
                 .addTo(map);
                 
-            console.log('Map successfully loaded with coordinates:', coordinates);
+            console.log('✅ Map successfully loaded with coordinates:', coordinates);
         });
 
         map.on('error', function(e) {
@@ -91,5 +102,8 @@ function initializeMap() {
     }
 }
 
-// Запускаем инициализацию карты
-initializeMap();
+// Запускаем инициализацию карты после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 DOM loaded, starting map initialization');
+    initializeMap();
+});
