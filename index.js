@@ -45,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(sanitizeV5({ replaceWith: '_' }));
 
 const sessionConfig = {
-  secret: 'thisshouldbeabettersecret!',
+  secret: 'soupisonthebalcony',
   resave: false,
   saveUninitialized: true,
   cookie: {
