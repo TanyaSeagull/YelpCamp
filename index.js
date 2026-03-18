@@ -84,11 +84,12 @@ app.use(
     helmet.contentSecurityPolicy({
         directives: {
             defaultSrc: [],
-            connectSrc: ["'self'", "https://api.maptiler.com", "https://cdn.maptiler.com"],
+            connectSrc: ["'self'", "https://api.maptiler.com", "https://cdn.maptiler.com", "https://cdn.jsdelivr.net"],
             scriptSrc: [
                 "'unsafe-inline'", 
                 "'self'", 
                 "https://cdn.maptiler.com",
+                "https://unpkg.com",
                 "https://cdn.jsdelivr.net",
                 "https://stackpath.bootstrapcdn.com",
                 "https://kit.fontawesome.com"
@@ -97,7 +98,8 @@ app.use(
             styleSrc: [
                 "'self'", 
                 "'unsafe-inline'", 
-                "https://cdn.maptiler.com", 
+                "https://cdn.maptiler.com",
+                "https://unpkg.com", 
                 "https://fonts.googleapis.com",
                 "https://cdn.jsdelivr.net",
                 "https://stackpath.bootstrapcdn.com",
