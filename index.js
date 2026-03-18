@@ -87,8 +87,7 @@ app.use(
             connectSrc: ["'self'", "https://api.maptiler.com", "https://cdn.maptiler.com", "https://cdn.jsdelivr.net"],
             scriptSrc: [
                 "'unsafe-inline'", 
-                "'self'", 
-                "https://cdn.maptiler.com",
+                "'self'",
                 "https://unpkg.com",
                 "https://cdn.jsdelivr.net",
                 "https://stackpath.bootstrapcdn.com",
