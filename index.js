@@ -84,10 +84,25 @@ app.use(
     helmet.contentSecurityPolicy({
         directives: {
             defaultSrc: [],
-            connectSrc: ["'self'", "https://api.maptiler.com"],
-            scriptSrc: ["'unsafe-inline'", "'self'", "https://cdn.maptiler.com"],
-            scriptSrcAttr: ["'unsafe-inline'", "'self'"], // РАЗРЕШАЕМ INLINE ОБРАБОТЧИКИ
-            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.maptiler.com", "https://fonts.googleapis.com"],
+            connectSrc: ["'self'", "https://api.maptiler.com", "https://cdn.maptiler.com"],
+            scriptSrc: [
+                "'unsafe-inline'", 
+                "'self'", 
+                "https://cdn.maptiler.com",
+                "https://cdn.jsdelivr.net",
+                "https://stackpath.bootstrapcdn.com",
+                "https://kit.fontawesome.com"
+            ],
+            scriptSrcAttr: ["'unsafe-inline'", "'self'"],
+            styleSrc: [
+                "'self'", 
+                "'unsafe-inline'", 
+                "https://cdn.maptiler.com", 
+                "https://fonts.googleapis.com",
+                "https://cdn.jsdelivr.net",
+                "https://stackpath.bootstrapcdn.com",
+                "https://kit-free.fontawesome.com"
+            ],
             workerSrc: ["'self'", "blob:"],
             objectSrc: [],
             imgSrc: [
@@ -100,11 +115,18 @@ app.use(
                 "https://source.unsplash.com/",
                 "https://picsum.photos/",
                 "https://api.maptiler.com",
+                "https://cdn.maptiler.com",
                 "https://*.unsplash.com/",
                 "https://*.picsum.photos/",
                 "https://*.cloudinary.com/" 
             ],
-            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            fontSrc: [
+                "'self'", 
+                "https://fonts.gstatic.com",
+                "https://cdn.jsdelivr.net",
+                "https://stackpath.bootstrapcdn.com",
+                "https://kit-free.fontawesome.com"
+            ],
         },
     })
 );
