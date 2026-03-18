@@ -5,18 +5,29 @@ const { places, descriptors } = require('./seedHelpers');
 const Campground = require('../models/campground');
 const User = require('../models/user');
 
-// Используем переменную окружения для подключения к БД
-const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
+// ВРЕМЕННО: выводим информацию для отладки
+console.log('🔍 Проверка переменных окружения:');
+console.log('DB_URL существует?', process.env.DB_URL ? '✅ Да' : '❌ Нет');
+if (process.env.DB_URL) {
+    // Показываем только начало строки, чтобы скрыть пароль
+    console.log('DB_URL начинается с:', process.env.DB_URL.substring(0, 30) + '...');
+}
 
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
+console.log('🔌 Подключаемся к:', dbUrl.substring(0, 30) + '...');
+
+// Увеличиваем таймауты
 mongoose.connect(dbUrl, {
-    serverSelectionTimeoutMS: 30000, // Увеличиваем таймаут до 30 секунд
-    socketTimeoutMS: 45000,
+    serverSelectionTimeoutMS: 30000, // 30 секунд
+    socketTimeoutMS: 45000, // 45 секунд
+    connectTimeoutMS: 30000, // 30 секунд
 })
 .then(() => console.log('✅ MongoDB connected successfully'))
 .catch(err => {
     console.error('❌ MongoDB connection error:', err);
     process.exit(1);
 });
+
 
 const db = mongoose.connection;
 
