@@ -19,10 +19,8 @@ module.exports.index = async (req, res) => {
                 id: campground._id,
                 title: campground.title,
                 location: campground.location,
-                popUpMarkup: `
-                    <strong><a href="/campgrounds/${campground._id}">${campground.title}</a></strong>
-                    <p>${campground.location}</p>
-                `
+                // Используем виртуальное поле из модели models/campground.js - virtuals
+            popUpMarkup: campground.properties.popUpMarkup
             }
         }))
     };

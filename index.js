@@ -22,6 +22,7 @@ const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 const sanitizeV5 = require('./utils/mongoSanitizeV5.js');
 const helmet = require('helmet');
+const MongoStore = require('connect-mongo');
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
@@ -45,16 +46,33 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(sanitizeV5({ replaceWith: '_' }));
 
+// Создаем хранилище сессий, связанное с БД
+const store = MongoStore.create({
+    mongoUrl: dbUrl, 
+    touchAfter: 24 * 60 * 60, // Обновлять сессию раз в 24 часа, а не при каждом запросе
+    crypto: {
+        secret: 'soupisonthebalcony' 
+    }
+});
+
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e);
+});
+
 const sessionConfig = {
+  store, // ← Передаем созданный store в конфигурацию!
+  name: 'session', // Безопасное имя куки вместо стандартного connect.sid
   secret: 'soupisonthebalcony',
   resave: false,
   saveUninitialized: true,
   cookie: {
       httpOnly: true,
+      // secure: true, // Раскомментируй при деплое (требует https)
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7
   }
 };
+
 app.use(session(sessionConfig));
 app.use(flash());
 app.use(helmet());
@@ -64,7 +82,7 @@ const scriptSrcUrls = [
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/",
+    "https://cdn.maptiler.com/", 
 ];
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
@@ -72,38 +90,29 @@ const styleSrcUrls = [
     "https://fonts.googleapis.com/",
     "https://use.fontawesome.com/",
     "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/",
+    "https://cdn.maptiler.com/", 
 ];
 const connectSrcUrls = [
     "https://api.maptiler.com/",
-    "https://cdn.jsdelivr.net/" // ← ДОБАВЬТЕ ЭТУ СТРОЧКУ!
+    "https://cdn.maptiler.com/",
+    "https://cdn.jsdelivr.net/"
 ];
-const fontSrcUrls = [];
+const fontSrcUrls = [
+    "https://fonts.gstatic.com/",
+    "https://cdn.jsdelivr.net",
+    "https://stackpath.bootstrapcdn.com",
+    "https://kit-free.fontawesome.com"
+];
 
+// 2. Передаем их динамически в директивы Helmet:
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
             defaultSrc: [],
-            connectSrc: ["'self'", "https://api.maptiler.com", "https://cdn.maptiler.com", "https://cdn.jsdelivr.net"],
-            scriptSrc: [
-                "'unsafe-inline'", 
-                "'self'",
-                "https://unpkg.com",
-                "https://cdn.jsdelivr.net",
-                "https://stackpath.bootstrapcdn.com",
-                "https://kit.fontawesome.com"
-            ],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'self'", "'unsafe-inline'", ...scriptSrcUrls, "https://unpkg.com"],
             scriptSrcAttr: ["'unsafe-inline'", "'self'"],
-            styleSrc: [
-                "'self'", 
-                "'unsafe-inline'", 
-                "https://cdn.maptiler.com",
-                "https://unpkg.com", 
-                "https://fonts.googleapis.com",
-                "https://cdn.jsdelivr.net",
-                "https://stackpath.bootstrapcdn.com",
-                "https://kit-free.fontawesome.com"
-            ],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls, "https://unpkg.com"],
             workerSrc: ["'self'", "blob:"],
             objectSrc: [],
             imgSrc: [
@@ -121,13 +130,7 @@ app.use(
                 "https://*.picsum.photos/",
                 "https://*.cloudinary.com/" 
             ],
-            fontSrc: [
-                "'self'", 
-                "https://fonts.gstatic.com",
-                "https://cdn.jsdelivr.net",
-                "https://stackpath.bootstrapcdn.com",
-                "https://kit-free.fontawesome.com"
-            ],
+            fontSrc: ["'self'", ...fontSrcUrls],
         },
     })
 );
