@@ -12,11 +12,11 @@ module.exports.register = async (req, res, next) => {
         req.login(registeredUser, err => {
             if (err) return next(err);
             req.flash('success', 'Welcome to Yelp Camp!');
-            res.redirect('/campgrounds');
-        })
+            return res.redirect('/campgrounds'); 
+        });
     } catch (e) {
         req.flash('error', e.message);
-        res.redirect('register');
+        return res.redirect('/register'); 
     }
 }
 
@@ -26,8 +26,8 @@ module.exports.renderLogin = (req, res) => {
 
 module.exports.login = (req, res) => {
     req.flash('success', 'welcome back!');
-    const redirectUrl = req.session.returnTo || '/campgrounds';
-    delete req.session.returnTo;
+    // Используем res.locals.returnTo из мидлвара storeReturnTo
+    const redirectUrl = res.locals.returnTo || '/campgrounds';
     res.redirect(redirectUrl);
 }
 
