@@ -164,11 +164,13 @@ app.all(/(.*)/, (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500 } = err;
-  if (!err.message) err.message = 'Oh No, Something Went Wrong!'
-  res.status(statusCode).render('error', { err })
-});
-
-app.listen(3000, () => {
-    console.log("App is listening on port 3000");
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = 'Oh No, Something Went Wrong!';
+    
+    // если заголовки уже начали отправляться, передаем управление Express
+    if (res.headersSent) {
+        return next(err);
+    }
+    
+    res.status(statusCode).render('error', { err });
 });
