@@ -104,31 +104,24 @@ const fontSrcUrls = [
     "https://kit-free.fontawesome.com"
 ];
 
-// 2. Передаем их динамически в директивы Helmet:
+const fontSrcUrls = [];
+
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
             defaultSrc: [],
             connectSrc: ["'self'", ...connectSrcUrls],
-            scriptSrc: ["'self'", "'unsafe-inline'", ...scriptSrcUrls, "https://unpkg.com"],
-            scriptSrcAttr: ["'unsafe-inline'", "'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls, "https://unpkg.com"],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
             workerSrc: ["'self'", "blob:"],
+            childSrc: ["blob:"],
             objectSrc: [],
             imgSrc: [
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/dnw1krx0t/",
-                "https://res.cloudinary.com/douqbebwk/", 
-                "https://images.unsplash.com/",
-                "https://source.unsplash.com/",
-                "https://picsum.photos/",
-                "https://api.maptiler.com",
-                "https://cdn.maptiler.com",
-                "https://*.unsplash.com/",
-                "https://*.picsum.photos/",
-                "https://*.cloudinary.com/" 
+                "https://res.cloudinary.com/dnw1krx0t/", 
+                "https://api.maptiler.com/",
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
         },
