@@ -3,7 +3,7 @@ require('dotenv').config();
 // Проверяем, что ключи Cloudinary есть
 if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_KEY || !process.env.CLOUDINARY_SECRET) {
     console.error("❌ Cloudinary environment variables are missing!");
-    process.exit(1); // Останавливаем приложение, если переменных нет
+    process.exit(1); 
 }
 
 const express = require('express');
@@ -46,10 +46,13 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(sanitizeV5({ replaceWith: '_' }));
 
+// Разрешаем Render правильно определять HTTPS для безопасности сессий
+app.set('trust proxy', 1);
+
 // Создаем хранилище сессий, связанное с БД
 const store = MongoStore.create({
     mongoUrl: dbUrl, 
-    touchAfter: 24 * 60 * 60, // Обновлять сессию раз в 24 часа, а не при каждом запросе
+    touchAfter: 24 * 60 * 60, 
     crypto: {
         secret: 'soupisonthebalcony' 
     }
@@ -60,14 +63,14 @@ store.on("error", function (e) {
 });
 
 const sessionConfig = {
-  store, // ← Передаем созданный store в конфигурацию!
-  name: 'session', // Безопасное имя куки вместо стандартного connect.sid
+  store, 
+  name: 'session', 
   secret: 'soupisonthebalcony',
   resave: false,
   saveUninitialized: true,
   cookie: {
       httpOnly: true,
-      // secure: true, // Раскомментируй при деплое (требует https)
+      // secure: true, // Можно раскомментировать, так как мы добавили trust proxy выше
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7
   }
@@ -75,8 +78,8 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 app.use(flash());
-app.use(helmet());
 
+// Настройки путей для Content Security Policy
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
     "https://kit.fontawesome.com/",
@@ -104,26 +107,27 @@ const fontSrcUrls = [
     "https://kit-free.fontawesome.com"
 ];
 
-const fontSrcUrls = [];
-
+// ОБЪЕДИНЕННЫЙ ВЫЗОВ HELMET (Решает проблему дублирования и блокировки карт)
 app.use(
-    helmet.contentSecurityPolicy({
-        directives: {
-            defaultSrc: [],
-            connectSrc: ["'self'", ...connectSrcUrls],
-            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
-            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
-            workerSrc: ["'self'", "blob:"],
-            childSrc: ["blob:"],
-            objectSrc: [],
-            imgSrc: [
-                "'self'",
-                "blob:",
-                "data:",
-                "https://res.cloudinary.com/dnw1krx0t/", 
-                "https://api.maptiler.com/",
-            ],
-            fontSrc: ["'self'", ...fontSrcUrls],
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: [],
+                connectSrc: ["'self'", ...connectSrcUrls],
+                scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+                styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+                workerSrc: ["'self'", "blob:"],
+                childSrc: ["blob:"],
+                objectSrc: [],
+                imgSrc: [
+                    "'self'",
+                    "blob:",
+                    "data:",
+                    "https://res.cloudinary.com/dnw1krx0t/", 
+                    "https://api.maptiler.com/",
+                ],
+                fontSrc: ["'self'", ...fontSrcUrls],
+            },
         },
     })
 );
@@ -142,7 +146,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
@@ -150,7 +153,6 @@ app.use('/campgrounds/:id/reviews', reviewRoutes);
 app.get('/', async (req, res) => {
     res.render('home');
 });
-
 
 app.all(/(.*)/, (req, res, next) => {
   next(new ExpressError('Page Not Found', 404))
@@ -160,7 +162,6 @@ app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = 'Oh No, Something Went Wrong!';
     
-    // если заголовки уже начали отправляться, передаем управление Express
     if (res.headersSent) {
         return next(err);
     }
