@@ -125,11 +125,14 @@ app.use(
                     "'self'",
                     "blob:",
                     "data:",
-                    "https://res.cloudinary.com/dnw1krx0t/", // аккаунт Cloudinary
-                    "https://res.cloudinary.com/",          // Для любых изображений Cloudinary
-                    "https://images.unsplash.com/",         // Для сид-картинок с Unsplash
-                    "https://api.maptiler.com/",            // Тайлы карты MapTiler
+                    "https://res.cloudinary.com/",
+                    "https://*.cloudinary.com/",     // Разрешает любые поддомены Cloudinary
+                    "https://images.unsplash.com/",  // Изображения Unsplash
+                    "https://source.unsplash.com/",  // Альтернативные ссылки Unsplash
+                    "https://*.unsplash.com/",       // Любые поддомены Unsplash
+                    "https://api.maptiler.com/",
                     "https://cdn.maptiler.com/",
+                    "https://*.maptiler.com/",
                 ],
                 fontSrc: ["'self'", ...fontSrcUrls],
             },
