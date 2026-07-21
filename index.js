@@ -70,7 +70,7 @@ const sessionConfig = {
   saveUninitialized: true,
   cookie: {
       httpOnly: true,
-      // secure: true, // Можно раскомментировать, так как мы добавили trust proxy выше
+      secure: true, 
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7
   }
