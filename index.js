@@ -115,7 +115,6 @@ app.use(
                 defaultSrc: [],
                 connectSrc: ["'self'", ...connectSrcUrls],
                 scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
-                // 1. РАЗРЕШАЕМ inline-события (onclick, onerror и т.д.)
                 scriptSrcAttr: ["'unsafe-inline'"], 
                 styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
                 workerSrc: ["'self'", "blob:"],
@@ -126,10 +125,12 @@ app.use(
                     "blob:",
                     "data:",
                     "https://res.cloudinary.com/",
-                    "https://*.cloudinary.com/",     // Разрешает любые поддомены Cloudinary
-                    "https://images.unsplash.com/",  // Изображения Unsplash
-                    "https://source.unsplash.com/",  // Альтернативные ссылки Unsplash
-                    "https://*.unsplash.com/",       // Любые поддомены Unsplash
+                    "https://*.cloudinary.com/",
+                    "https://images.unsplash.com/",
+                    "https://source.unsplash.com/",
+                    "https://*.unsplash.com/",
+                    "https://picsum.photos/",        
+                    "https://*.picsum.photos/",      // для CDN fastly.picsum.photos
                     "https://api.maptiler.com/",
                     "https://cdn.maptiler.com/",
                     "https://*.maptiler.com/",
