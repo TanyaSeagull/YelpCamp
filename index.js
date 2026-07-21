@@ -115,6 +115,8 @@ app.use(
                 defaultSrc: [],
                 connectSrc: ["'self'", ...connectSrcUrls],
                 scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+                // 1. РАЗРЕШАЕМ inline-события (onclick, onerror и т.д.)
+                scriptSrcAttr: ["'unsafe-inline'"], 
                 styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
                 workerSrc: ["'self'", "blob:"],
                 childSrc: ["blob:"],
@@ -123,8 +125,11 @@ app.use(
                     "'self'",
                     "blob:",
                     "data:",
-                    "https://res.cloudinary.com/dnw1krx0t/", 
-                    "https://api.maptiler.com/",
+                    "https://res.cloudinary.com/dnw1krx0t/", // аккаунт Cloudinary
+                    "https://res.cloudinary.com/",          // Для любых изображений Cloudinary
+                    "https://images.unsplash.com/",         // Для сид-картинок с Unsplash
+                    "https://api.maptiler.com/",            // Тайлы карты MapTiler
+                    "https://cdn.maptiler.com/",
                 ],
                 fontSrc: ["'self'", ...fontSrcUrls],
             },
